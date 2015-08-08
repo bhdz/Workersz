@@ -1,7 +1,7 @@
 # Workersz!(Py)
 This is a collection of Primitives for dealing with Python's threading module/package.
 
-Primitives::
+Primitives and Modules::
 
 ./workersz/base.py::
 
