@@ -1,11 +1,12 @@
 '''
-Created on Aug 8, 2015
+Created on Aug 11, 2015
 
 @author: dakkar
 '''
-import unittest
-from workersz.base import WorkerBase
+from workersz.base import Worker
 
+def check_Base():
+    pass
 
 if __name__ == "__main__":
     from workersz.base import check_WorkerBase
@@ -16,4 +17,3 @@ if __name__ == "__main__":
     
     for check in checks:
         check()
-        

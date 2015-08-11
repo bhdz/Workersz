@@ -1,6 +1,94 @@
 
 import threading
 
+class Worker(threading.Thread):
+    """ Vanilla worker skeleton. Serves as a base for all.
+    Overrides run, calls on_* in run method, quits with
+    _quit self.method.
+    
+    *) event/action commands
+    The Worker has events and actions associated with it. Those 
+    Events are (by default) bound to method/function calls. 
+    Events are either waited (Blocking behavior) or polled(Non-blocking) and 
+    Actions are called which modify the Instance somehow.
+    
+    *) target/task behavior
+    The default behavior on Target's task is to pass an item to do_work.
+    
+    """
+    def __init__(self, *args, **kwargs):
+        super(threading.Thread, self).__init__(*args,**kwargs)
+        self.to_quit = False
+        
+    def run(self):
+        while not self.to_quit:
+            setevents_actions = self.check_events()
+            
+            if False == self.do_command():
+                break
+            
+            self.do_process_events(setevents_actions)
+            
+            if False == self.do_postevents():
+                break
+            
+            result = self.do_work()
+            self.do_result(result)
+            
+            if False == self.do_postwork():
+                break
+    # self methods/API
+    def _quit(self):
+        self.to_quit = True
+        
+    # Implement these to modify event/command behavior
+    def check_events(self):
+        """ Checks for Worker command events for being set.
+        RETURNs a list of SetEvents/Action commands.
+        
+        User is responsible for deciding what these events mean, what actions 
+        they are bound to, and whether the checks are waited or not."""
+        return []
+    
+    def process_events(self, events_actions):
+        """ Process events/command actions. Overrride this to modify event 
+        command action"""
+        pass
+    
+    # Implement/override to modify the target behavior
+    def do_command(self):
+        """This is called in between events
+        Return False if the Worker is to quit it's main loop"""
+    
+    # Implement/override to modify the target  behavior
+    def do_postevents(self):
+        """ Do something after the events have been processed.
+        Return False if the Worker should quit
+        """
+        return True
+    
+    # Implement/override to modify the target  behavior
+    def do_postwork(self):
+        """ Do something after the work-task has been done.
+        Return False if the Worker should quit
+        """
+        return True
+    
+    # Implement/override to modify the target  behavior
+    def do_work(self, item = None):
+        """ Do something with item or override this method"""
+        if item:
+            result = self.target(item, *self.args, **self.kwargs)
+        else:
+            #print "self.args:", self.args
+            result = self.target(*self.args, **self.kwargs)
+        return result
+    
+    # Implement/override to modify the behavior
+    def do_result(self,result):
+        """ Do something with Results of the work being done """
+        pass
+
 class EventAction(object):
     """ This couples an event with a method/function call""" 
     def __init__(self, event, action, 
@@ -53,8 +141,8 @@ class EventAction(object):
         #print "EventAction.call_action: self.args=%s, self.kwargs=%s" % (self.args, self.kwargs)
         return self.action(*self.args, **self.kwargs)
 
-class WorkerBase(threading.Thread):
-    """ This class serves as a Base for all Types of workers.
+class WorkerPollingBase(Worker):
+    """ This class serves as a Base for all Polling Types of workers.
     It sets a template of on_* method calls that are left 
     for the User to either use or override. 
     
@@ -73,7 +161,7 @@ class WorkerBase(threading.Thread):
         self.target = target
         self.args = args
         self.kwargs = kwargs
-        super(WorkerBase, self).__init__(target=target,
+        super(WorkerPollingBase, self).__init__(target=target,
                                      args=args,
                                      kwargs=kwargs,
                                      name=name)
@@ -139,6 +227,10 @@ class WorkerBase(threading.Thread):
     def run(self):
         while not self.to_quit:
             setevents_actions = self.check_events()
+            
+            if False == self.do_command():
+                break
+            
             self.process_events(setevents_actions)
             
             if False == self.do_postevents():
@@ -152,12 +244,13 @@ class WorkerBase(threading.Thread):
     
     # Implement/override to modify the behavior
     def do_command(self):
-        """This is deprecated"""
+        """This is called in between events
+        Return False if the Worker is to quit it's main looop"""
     
     # Implement/override to modify the behavior
     def do_postevents(self):
         """ Do something after the events have been processed.
-        Return False if the Worker is unrecoverable and shhouldt quit
+        Return False if the Worker should quit
         """
         return True
     
@@ -197,7 +290,7 @@ def check_WorkerBase():
     quitter = threading.Event() 
     happened_event = threading.Event()
     
-    pretty_worker = WorkerBase(target=pretty_printer, args=("Hello world!",), e_quit=quitter)
+    pretty_worker = WorkerPollingBase(target=pretty_printer, args=("Hello world!",), e_quit=quitter)
     pretty_worker.add_action( EventAction(happened_event, something_happened, args=("bla",) ))
     
     pretty_worker.start()
