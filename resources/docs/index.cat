@@ -1,0 +1,7 @@
+#!/bin/cat
+
+base.module.text
+# this is the whole documentation for the workersz.base module
+
+base.Worker.class.text
+# this is the whole documentation for the workersz.Worker.class.text module

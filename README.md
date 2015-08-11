@@ -4,20 +4,26 @@ This is a collection of Primitives for dealing with Python's threading module/pa
 
 Primitives and Modules::
 
-./workersz/base.py::
+./src/workersz/base.py::
+*) This is the base for the whole library. Thin base classes.
+*) Hierarchy is set to <two> inheritors Max.
 
+*)Class listage::
 WorkerBase: A thin base class for all types of workers
 
-./workersz/pools.py
+./src/workersz/pools.py::
+All Pools Bases will be here, stay tuned.
 
-All Thread pools will be based in this modyle, Stay tuned. 
 
 # Project developers, maintainers, debuggers, founders::
 
 https://github.com/hardc0d3 @@ hdcd
-
 https://github.com/bhdz/  @@ bhdz
 
 ~~~
 
-# Dev.logs can be found in the ./resources/dev.log directory
+# Documentation can be found in the ./resources/docs/ 
+# 
+
+# Dev.logs can be found in the ./resources/dev.log
+# 

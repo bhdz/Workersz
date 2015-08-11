@@ -1,0 +1,20 @@
+#!/bin/cat
+
+./docs/
+# All the documentation is based here
+
+./dev.log
+# A file log for the last committer, please add your line in this format::
+# <datetime| in your format> ** <committer> ** <message>
+#
+# bhdz uses this alias for the datetime::
+# dt='date +%Y-%m-%d--%s'
+# 
+
+./logs/
+# ALL MAJOR Logs could be added in this directory
+#  Whenever you have a Major re-write, or re-design, please ADD the following::
+# *) A line in ./dev.log with optional MARKER to ./logs directory
+# *) A DIRECTORY/FILE in the logs with the DATE in a suitable format
+#  Let's just use $( `date+%Y-%m-%d`+${MARKER} ) or something to SYNCHRONIZE
+#  LOGs

@@ -1,0 +1,14 @@
+I (bhdz) changed the layout:
+    To::
+        ./src/
+        ./testing/
+        ./resources/logs/
+        ./resources/docs/
+        ./resources/index.cat
+        README.md
+        
+    From::
+        workersz/
+        testing
+        ...
+        README
